@@ -3,6 +3,7 @@
  */
 package com.usav.boxgame;
 
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.util.ArrayList;
@@ -136,11 +137,11 @@ public class Box {
 
 		for (Point2D point : coords) {
 
-			if (anotherBox.getRect().contains(point)) {
+			if (anotherBox.getRect().outcode(point) == 0) {
 				return true;
 			}
 		}
-
+		
 		return false;
 	}
 
@@ -148,23 +149,33 @@ public class Box {
 
 		ArrayList<Point2D> coords = anotherBox.getCoords();
 		Line2D line = new Line2D.Double();
+		
+		/*
+		if (this.getRect().contains(anotherBox.getRect()) ||
+				anotherBox.getRect().contains(this.getRect())) {
+			return false;
+		}*/
+		Dimension intersectionSize = this.getRect().createIntersection(anotherBox.getRect()).getBounds().getSize();
+		if (intersectionSize.getWidth() * intersectionSize.getHeight() != 0) {
+			return false;
+		}
 	
 		for (Point2D point : coords) {
 			
 			line.setLine(this.getCoords().get(0), this.getCoords().get(1));
-			if (line.ptLineDist(point) == 0) {
+			if (line.ptSegDist(point) == 0) {
 				return true;
 			}
 			line.setLine(this.getCoords().get(1), this.getCoords().get(2));
-			if (line.ptLineDist(point) == 0) {
+			if (line.ptSegDist(point) == 0) {
 				return true;
 			}
 			line.setLine(this.getCoords().get(2), this.getCoords().get(3));
-			if (line.ptLineDist(point) == 0) {
+			if (line.ptSegDist(point) == 0) {
 				return true;
 			}
 			line.setLine(this.getCoords().get(3), this.getCoords().get(0));
-			if (line.ptLineDist(point) == 0) {
+			if (line.ptSegDist(point) == 0) {
 				return true;
 			}
 		}

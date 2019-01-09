@@ -99,7 +99,7 @@ public class AppTest
     	assertTrue(box2.isConnection(box1));
     	
     	Box box3 = new Box(new Point(10,10), 10, 10);
-    	Box box4 = new Box(new Point(10,5), 2, 2);
+    	Box box4 = new Box(new Point(10,12), 2, 2);
     	
     	// box4 по левой грани box3 изнутри
     	assertFalse(box3.isConnection(box4));    	
