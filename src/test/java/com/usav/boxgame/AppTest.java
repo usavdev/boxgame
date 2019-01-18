@@ -68,7 +68,7 @@ public class AppTest
     	
     	Box box3 = new Box(new Point(100,100), 40, 40);
     	box1.setPosition(new Point(100,120));
-    	assertFalse(box3.isCorrelation(box1));    
+    	assertTrue(box3.isCorrelation(box1));    
     }
     
     /**

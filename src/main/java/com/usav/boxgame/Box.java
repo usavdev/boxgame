@@ -133,58 +133,24 @@ public class Box {
 	}
 
 	public boolean isCorrelation(Box anotherBox) {
-		ArrayList<Point2D> coords = this.getCoords();
-
-		for (Point2D point : coords) {
-
-			if (anotherBox.getRect().outcode(point) == 0) {
-				return true;
-			}
-		}
+		Rectangle2D d = this.getRect().createIntersection(anotherBox.getRect());
+		System.out.println(d.getWidth() + " " + d.getHeight());
 		
-		return false;
+		return d.getWidth() > 0 && d.getHeight() > 0;
 	}
 
 	public boolean isConnection(Box anotherBox) {
-
-		ArrayList<Point2D> coords = anotherBox.getCoords();
-		Line2D line = new Line2D.Double();
 		
-		/*
-		if (this.getRect().contains(anotherBox.getRect()) ||
-				anotherBox.getRect().contains(this.getRect())) {
-			return false;
-		}*/
-		Dimension intersectionSize = this.getRect().createIntersection(anotherBox.getRect()).getBounds().getSize();
-		if (intersectionSize.getWidth() * intersectionSize.getHeight() != 0) {
-			return false;
-		}
-	
-		for (Point2D point : coords) {
-			
-			line.setLine(this.getCoords().get(0), this.getCoords().get(1));
-			if (line.ptSegDist(point) == 0) {
-				return true;
-			}
-			line.setLine(this.getCoords().get(1), this.getCoords().get(2));
-			if (line.ptSegDist(point) == 0) {
-				return true;
-			}
-			line.setLine(this.getCoords().get(2), this.getCoords().get(3));
-			if (line.ptSegDist(point) == 0) {
-				return true;
-			}
-			line.setLine(this.getCoords().get(3), this.getCoords().get(0));
-			if (line.ptSegDist(point) == 0) {
-				return true;
-			}
-		}
+		Rectangle2D d = this.getRect().createIntersection(anotherBox.getRect());
+		System.out.println(d.getWidth() + " " + d.getHeight());
+		
+		return !(d.getWidth() == 0 && d.getHeight() == 0) && (d.getWidth() == 0 || d.getWidth() == -1 || d.getHeight() == 0 || d.getHeight() == -1);
+		
 
-		return false;
 	}
 
 	public void drawBox(Graphics graphics) {
-		graphics.drawRect((int) this.getPosition().getX(), (int) this.getPosition().getY(),
+		graphics.fillRect((int) this.getPosition().getX(), (int) this.getPosition().getY(),
 				this.getBoxWidth(), this.getBoxHeigth());
 	}
 

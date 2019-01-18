@@ -11,6 +11,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferStrategy;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -39,7 +40,7 @@ public class App {
 	}
 
 	public static void DrawTest() {
-
+		
 		final String title = "Test Window";
 		final int width = 1200;
 		final int height = width / 16 * 9;
@@ -68,9 +69,12 @@ public class App {
 			public void mouseClicked(MouseEvent e) {
 				if (canBeConnected) {
 					savedBoxes.add(new Box(boxGreen.getPosition(), boxGreen.getBoxWidth(), boxGreen.getBoxHeigth()));
+
 				}
 			}
 		});
+		
+		Area area = new Area(60, 30, 20);
 
 		boolean running = true;
 
@@ -79,37 +83,38 @@ public class App {
 			int mouse_x = MouseInfo.getPointerInfo().getLocation().x - canvas.getLocationOnScreen().x;
 			int mouse_y = MouseInfo.getPointerInfo().getLocation().y - canvas.getLocationOnScreen().y;
 			canBeConnected = savedBoxes.size() == 0;
-			boolean someOneCorrelation = false;
-
+			
 			if (!canBeConnected) {
 				for (Box box : savedBoxes) {
-					if (boxGreen.isConnection(box)) {						
-						canBeConnected = true;
+					if (box.isConnection(boxGreen)) {
+						canBeConnected = true;						
 					}
 				}
-			}
-			
+			}			
 
 			bufferStrategy = canvas.getBufferStrategy();
 			graphics = bufferStrategy.getDrawGraphics();
 			graphics.clearRect(0, 0, width, height);
+			
+			area.drawArea(graphics);
 
 			graphics.setColor(Color.YELLOW);
 			graphics.drawString("canBeConnected: " + String.valueOf(canBeConnected), 5, 15);
-			graphics.drawString("someOneCorrelation: " + String.valueOf(someOneCorrelation), 5, 35);
-			
-
+					
 			graphics.setColor(Color.RED);
-			for (Box box : savedBoxes) {
+			Iterator<Box> it = savedBoxes.iterator(); 
+			while(it.hasNext()) {
+				Box box = it.next();
 				box.drawBox(graphics);
 			}
+
 
 			if (canBeConnected) {
 				graphics.setColor(Color.GREEN);
 			} else {
 				graphics.setColor(Color.YELLOW);
 			}
-			boxGreen.setPosition(new Point(mouse_x, mouse_y));
+			boxGreen.setPosition(area.getPosition(new Point(mouse_x, mouse_y)));
 			boxGreen.drawBox(graphics);
 
 			bufferStrategy.show();
