@@ -2,66 +2,57 @@ package com.usav.boxgame;
 
 import java.awt.Canvas;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.MouseInfo;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.geom.Point2D;
 import java.awt.image.BufferStrategy;
 import java.util.ArrayList;
-import java.util.Iterator;
 
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 
 public class App {
 	private static ArrayList<Box> savedBoxes = new ArrayList<Box>();
-	private static Box boxGreen = new Box(new Point(1, 1), 100, 100);
+	private static Area area = new Area(20, 20, 19);
+	private static Box boxGreen = new Box(new Point(-999,-999), Dice.getNext() * area.getCell(), Dice.getNext() * area.getCell());
 	private static BufferStrategy bufferStrategy;
 	private static Graphics graphics;
 	private static Canvas canvas = new Canvas();
 	private static boolean canBeConnected = false;
-
+	
 	public static void main(String[] args) {
-		System.out.println("Hello World!");
-
-		for (int i = 0; i < 5; i++) {
-			System.out.println(Dice.getValue());
-		}
+		System.out.println("Hello Box!");
 
 		DrawTest();
 
 	}
 
-	public static void DrawTest() {
+	public static void DrawTest() {		
 		
-		final Area area = new Area(60, 30, 20);
 		
-		final String title = "Test Window";
-		final int width = 1200;
-		final int height = width / 16 * 9;
+		final String title = "Test Box";
+		final int width = area.getAreaWidth();
+		final int height = area.getAreaHeight();
 
-		// Creating the frame.
 		JFrame frame = new JFrame(title);
-
-		frame.setSize(width, height);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setLocationRelativeTo(null);
-		frame.setResizable(false);
-		frame.setVisible(true);
-
+				
 		canvas.setSize(width, height);
 		canvas.setBackground(Color.BLACK);
 		canvas.setVisible(true);
 		canvas.setFocusable(false);
-
-		// Putting it all together.
+		
 		frame.add(canvas);
-
+		
+		frame.pack();
+				
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setLocationRelativeTo(null);
+		frame.setResizable(false);		
+		frame.setVisible(true);
+		
 		canvas.createBufferStrategy(3);
-
 		canvas.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -70,18 +61,21 @@ public class App {
 					saveBox.setBoxColor(boxGreen.getBoxColor());
 					savedBoxes.add(saveBox);
 					boxGreen.setBoxColor(new Color((int)(Math.random() * 0x1000000)));
-					boxGreen.setBoxWidth(area.getCell() * Dice.getValue());
-					boxGreen.setBoxHeigth(area.getCell() * Dice.getValue());
+					boxGreen.setBoxWidth(area.getCell() * Dice.getNext());
+					boxGreen.setBoxHeigth(area.getCell() * Dice.getNext());
 				}
 			}
 		});
+		
 				
 		boxGreen.setBoxColor(new Color((int)(Math.random() * 0x1000000)));
 
 		boolean running = true;
 
 		while (running) {
-
+			
+			running = area.canBeAdded(boxGreen,savedBoxes);
+			
 			int mouse_x = MouseInfo.getPointerInfo().getLocation().x - canvas.getLocationOnScreen().x;
 			int mouse_y = MouseInfo.getPointerInfo().getLocation().y - canvas.getLocationOnScreen().y;
 			canBeConnected = savedBoxes.size() == 0;
@@ -110,7 +104,13 @@ public class App {
 				box.drawBox(graphics);
 			}
 			
-			boxGreen.setPosition(area.getPosition(new Point(mouse_x, mouse_y)));
+			Point2D newPosition = new Point(mouse_x - boxGreen.getBoxWidth() / 2, mouse_y - boxGreen.getBoxHeigth() / 2);
+			Point2D oldPosition = boxGreen.getPosition();
+			boxGreen.setPosition(area.getPosition(newPosition));			
+			if (!area.isContains(boxGreen)) {
+				boxGreen.setPosition(oldPosition);
+			}
+			
 			boxGreen.drawBox(graphics,canBeConnected);
 
 			bufferStrategy.show();

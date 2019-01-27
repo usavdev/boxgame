@@ -4,11 +4,8 @@
 package com.usav.boxgame;
 
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.Point;
 import java.util.ArrayList;
-import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
@@ -24,7 +21,7 @@ public class Box {
 	private int boxWidth;
 	private int boxHeigth;
 	private Color boxColor = Color.RED;
-	private final int corrFrameWidth = 10; 
+	private final int corrFrameWidth = 5; 
 
 	/**
 	 * @param rect
@@ -141,13 +138,16 @@ public class Box {
 		return d.getWidth() > 0 && d.getHeight() > 0;
 	}
 
-	public boolean isConnection(Box anotherBox) {
-		
+	public boolean isConnection(Box anotherBox) {		
 		Rectangle2D d = this.getRect().createIntersection(anotherBox.getRect());		
 		
 		return !(d.getWidth() == 0 && d.getHeight() == 0) && 
 				((d.getWidth() == 0 && d.getHeight() > 0) || 
 				(d.getHeight() == 0 && d.getWidth() > 0));		
+	}
+	
+	public boolean isContains(Box anotherBox) {		
+		return this.getRect().contains(anotherBox.getRect());	
 	}
 
 	public void drawBox(Graphics graphics) {

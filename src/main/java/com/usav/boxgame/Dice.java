@@ -9,7 +9,7 @@ public class Dice {
 	static final int MIN_VALUE = 1; 
 	static final int MAX_VALUE = 6; 
 	
-	public static int getValue() {
+	public static int getNext() {
 		return randomWithRange(MIN_VALUE,MAX_VALUE);
 	}
 

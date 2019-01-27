@@ -3,20 +3,23 @@ package com.usav.boxgame;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.geom.Point2D;
+import java.util.ArrayList;
 
 public class Area {
 
 	private int width;
 	private int height;
 	private int cell;
+	private Box selfBox;
 	
-	private final Color backColor = Color.BLUE;
-	private final Color lineColor = Color.MAGENTA;
+	private final Color backColor = Color.WHITE;
+	private final Color lineColor = Color.LIGHT_GRAY;
 	
 	public Area(int width, int height, int cell) {
 		setWidth(width);
 		setHeight(height);
 		setCell(cell);
+		selfBox = new Box(new Point2D.Double(0, 0),this.getAreaWidth(), this.getAreaHeight());
 	}
 	
 	public void drawArea(Graphics graphics) {
@@ -96,5 +99,13 @@ public class Area {
 	public final Point2D getPosition(Point2D position) {		
 		return new Point2D.Double( Math.round((position.getX() / this.getCell())) * this.getCell(), Math.round((position.getY() / this.getCell())) * this.getCell());
 	}
-
+	
+	public final boolean isContains(Box box) {
+		return selfBox.isContains(box);
+	}
+	
+	public final boolean canBeAdded(Box box,ArrayList<Box> savedBoxes) {
+		//TODO сделать анализатор поля
+		return true;
+	}
 }

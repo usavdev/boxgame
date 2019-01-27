@@ -35,8 +35,8 @@ public class AppTest
      */
     public void testDice()
     {
-    	assertTrue(isNumeric(String.valueOf(Dice.getValue())));    
-    	int val = Dice.getValue();
+    	assertTrue(isNumeric(String.valueOf(Dice.getNext())));    
+    	int val = Dice.getNext();
     	assertTrue(val <= Dice.MAX_VALUE && val >= Dice.MIN_VALUE);
     }
     
