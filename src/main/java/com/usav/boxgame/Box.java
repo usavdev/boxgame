@@ -3,6 +3,7 @@
  */
 package com.usav.boxgame;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Point;
@@ -22,6 +23,8 @@ public class Box {
 	private Point2D position;
 	private int boxWidth;
 	private int boxHeigth;
+	private Color boxColor = Color.RED;
+	private final int corrFrameWidth = 10; 
 
 	/**
 	 * @param rect
@@ -134,24 +137,48 @@ public class Box {
 
 	public boolean isCorrelation(Box anotherBox) {
 		Rectangle2D d = this.getRect().createIntersection(anotherBox.getRect());
-		System.out.println(d.getWidth() + " " + d.getHeight());
 		
 		return d.getWidth() > 0 && d.getHeight() > 0;
 	}
 
 	public boolean isConnection(Box anotherBox) {
 		
-		Rectangle2D d = this.getRect().createIntersection(anotherBox.getRect());
-		System.out.println(d.getWidth() + " " + d.getHeight());
+		Rectangle2D d = this.getRect().createIntersection(anotherBox.getRect());		
 		
-		return !(d.getWidth() == 0 && d.getHeight() == 0) && (d.getWidth() == 0 || d.getWidth() == -1 || d.getHeight() == 0 || d.getHeight() == -1);
-		
-
+		return !(d.getWidth() == 0 && d.getHeight() == 0) && 
+				((d.getWidth() == 0 && d.getHeight() > 0) || 
+				(d.getHeight() == 0 && d.getWidth() > 0));		
 	}
 
 	public void drawBox(Graphics graphics) {
+		Color oldColor = graphics.getColor();
+		graphics.setColor(this.getBoxColor());
 		graphics.fillRect((int) this.getPosition().getX(), (int) this.getPosition().getY(),
 				this.getBoxWidth(), this.getBoxHeigth());
+		graphics.setColor(oldColor);
+	}
+	
+	public void drawBox(Graphics graphics, boolean isConnection) {		
+		Color oldColor = graphics.getColor();
+		if (isConnection) {			
+			graphics.setColor(Color.GREEN);
+			graphics.fillRect((int) this.getPosition().getX(), (int) this.getPosition().getY(),
+					this.getBoxWidth(), this.getBoxHeigth());
+			graphics.setColor(this.getBoxColor());			
+			graphics.fillRect((int) this.getPosition().getX() + corrFrameWidth, (int) this.getPosition().getY() + corrFrameWidth,
+					this.getBoxWidth() - corrFrameWidth * 2, this.getBoxHeigth() - corrFrameWidth * 2);
+		} else {
+			this.drawBox(graphics);
+		}
+		graphics.setColor(oldColor);
+	}
+
+	public Color getBoxColor() {
+		return boxColor;
+	}
+
+	public void setBoxColor(Color boxColor) {
+		this.boxColor = boxColor;
 	}
 
 }

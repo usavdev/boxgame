@@ -16,10 +16,6 @@ import java.util.Iterator;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-/**
- * Hello world!
- *
- */
 public class App {
 	private static ArrayList<Box> savedBoxes = new ArrayList<Box>();
 	private static Box boxGreen = new Box(new Point(1, 1), 100, 100);
@@ -40,6 +36,8 @@ public class App {
 	}
 
 	public static void DrawTest() {
+		
+		final Area area = new Area(60, 30, 20);
 		
 		final String title = "Test Window";
 		final int width = 1200;
@@ -68,13 +66,17 @@ public class App {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				if (canBeConnected) {
-					savedBoxes.add(new Box(boxGreen.getPosition(), boxGreen.getBoxWidth(), boxGreen.getBoxHeigth()));
-
+					Box saveBox = new Box(boxGreen.getPosition(), boxGreen.getBoxWidth(), boxGreen.getBoxHeigth());
+					saveBox.setBoxColor(boxGreen.getBoxColor());
+					savedBoxes.add(saveBox);
+					boxGreen.setBoxColor(new Color((int)(Math.random() * 0x1000000)));
+					boxGreen.setBoxWidth(area.getCell() * Dice.getValue());
+					boxGreen.setBoxHeigth(area.getCell() * Dice.getValue());
 				}
 			}
 		});
-		
-		Area area = new Area(60, 30, 20);
+				
+		boxGreen.setBoxColor(new Color((int)(Math.random() * 0x1000000)));
 
 		boolean running = true;
 
@@ -86,8 +88,14 @@ public class App {
 			
 			if (!canBeConnected) {
 				for (Box box : savedBoxes) {
-					if (box.isConnection(boxGreen)) {
-						canBeConnected = true;						
+					if (boxGreen.isConnection(box)) {
+						canBeConnected = true;	
+						for (Box boxCorr:savedBoxes) {
+							if (boxGreen.isCorrelation(boxCorr)) {
+								canBeConnected = false;
+								break;
+							}
+						}										
 					}
 				}
 			}			
@@ -97,25 +105,13 @@ public class App {
 			graphics.clearRect(0, 0, width, height);
 			
 			area.drawArea(graphics);
-
-			graphics.setColor(Color.YELLOW);
-			graphics.drawString("canBeConnected: " + String.valueOf(canBeConnected), 5, 15);
-					
-			graphics.setColor(Color.RED);
-			Iterator<Box> it = savedBoxes.iterator(); 
-			while(it.hasNext()) {
-				Box box = it.next();
+											
+			for (Box box:savedBoxes) {
 				box.drawBox(graphics);
 			}
-
-
-			if (canBeConnected) {
-				graphics.setColor(Color.GREEN);
-			} else {
-				graphics.setColor(Color.YELLOW);
-			}
+			
 			boxGreen.setPosition(area.getPosition(new Point(mouse_x, mouse_y)));
-			boxGreen.drawBox(graphics);
+			boxGreen.drawBox(graphics,canBeConnected);
 
 			bufferStrategy.show();
 			graphics.dispose();
