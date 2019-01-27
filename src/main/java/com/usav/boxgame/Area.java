@@ -99,8 +99,34 @@ public class Area {
 		return selfBox.isContains(box);
 	}
 
-	public final boolean canBeAdded(Box box, ArrayList<Box> savedBoxes) {
-		// TODO сделать анализатор поля
-		return true;
+	public final Point2D canBeAdded(Box box, ArrayList<Box> savedBoxes) {
+		Point2D sourcePos = box.getPosition();
+		Point2D possiblePos = new Point2D.Double();
+
+		if (savedBoxes.size() == 0) {			
+			return possiblePos;
+		}
+
+		possiblePos.setLocation(-999, -999);
+		fnd: for (int x = 0; x <= this.getWidth() - box.getBoxWidth() / this.getCell(); x++) {
+			for (int y = 0; y <= this.getHeight() - box.getBoxHeigth() / this.getCell(); y++) {
+				Point2D newPos = new Point2D.Double(x * this.getCell(), y * this.getCell());
+				box.setPosition(newPos);
+				svd: for (Box sBox : savedBoxes) {
+					if (box.isConnection(sBox)) {
+						for (Box boxCorr : savedBoxes) {
+							if (box.isCorrelation(boxCorr)) {
+								break svd;
+							}
+						}
+						possiblePos = newPos;
+						break fnd;
+					}
+				}
+			}
+		}
+
+		box.setPosition(sourcePos);
+		return possiblePos;
 	}
 }

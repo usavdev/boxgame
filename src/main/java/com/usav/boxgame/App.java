@@ -2,6 +2,7 @@ package com.usav.boxgame;
 
 import java.awt.Canvas;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.MouseInfo;
 import java.awt.Point;
@@ -11,12 +12,15 @@ import java.awt.geom.Point2D;
 import java.awt.image.BufferStrategy;
 import java.util.ArrayList;
 
+import javax.swing.BorderFactory;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 
 public class App {
 	private static ArrayList<Box> savedBoxes = new ArrayList<Box>();
 	private static Area area = new Area(20, 20, 19);
-	private static Box boxGreen = new Box(new Point(-999, -999), Dice.getNext() * area.getCell(),
+	private static Box boxGreen = new Box(new Point(0, 0), Dice.getNext() * area.getCell(),
 			Dice.getNext() * area.getCell());
 	private static BufferStrategy bufferStrategy;
 	private static Graphics graphics;
@@ -26,7 +30,7 @@ public class App {
 	public static void main(String[] args) {
 		System.out.println("Hello Box!");
 
-		DrawTest();		
+		DrawTest();
 
 	}
 
@@ -43,7 +47,7 @@ public class App {
 		canvas.setVisible(true);
 		canvas.setFocusable(false);
 
-		frame.add(canvas);
+		frame.add(canvas);		
 
 		frame.pack();
 
@@ -70,10 +74,14 @@ public class App {
 		boxGreen.setBoxColor(new Color((int) (Math.random() * 0x1000000)));
 
 		boolean running = true;
-
+		boolean gameOver = !(area.canBeAdded(boxGreen, savedBoxes).getX() >= 0);
 		while (running) {
-
-			running = area.canBeAdded(boxGreen, savedBoxes);
+			Point2D possiblePoint = area.canBeAdded(boxGreen, savedBoxes);
+			if (!gameOver) {								
+				gameOver = !(possiblePoint.getX() >= 0);
+			} else {
+				frame.setTitle(title + " - Игра окончена!");
+			}
 
 			int mouse_x = MouseInfo.getPointerInfo().getLocation().x - canvas.getLocationOnScreen().x;
 			int mouse_y = MouseInfo.getPointerInfo().getLocation().y - canvas.getLocationOnScreen().y;
@@ -102,7 +110,7 @@ public class App {
 			for (Box box : savedBoxes) {
 				box.drawBox(graphics);
 			}
-
+			
 			Point2D newPosition = new Point(mouse_x - boxGreen.getBoxWidth() / 2,
 					mouse_y - boxGreen.getBoxHeigth() / 2);
 			Point2D oldPosition = boxGreen.getPosition();
@@ -110,6 +118,8 @@ public class App {
 			if (!area.isContains(boxGreen)) {
 				boxGreen.setPosition(oldPosition);
 			}
+			
+			area.canBeAdded(boxGreen, savedBoxes);
 
 			boxGreen.drawBox(graphics, canBeConnected);
 
