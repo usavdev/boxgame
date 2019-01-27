@@ -21,11 +21,10 @@ public class Box {
 	private int boxWidth;
 	private int boxHeigth;
 	private Color boxColor = Color.RED;
-	private final int corrFrameWidth = 5; 
+	private final int corrFrameWidth = 5;
 
 	/**
-	 * @param rect
-	 *            the rect to set
+	 * @param rect the rect to set
 	 */
 	private final void setRect() {
 		rect.setRect(this.getPosition().getX(), this.getPosition().getY(), this.getBoxWidth(), this.getBoxHeigth());
@@ -42,16 +41,16 @@ public class Box {
 	 * @param calc the coords to set
 	 */
 	public final void setCoords() {
-		
+
 		// Левая верхняя (0)
 		coords.get(0).setLocation(this.getRect().getMinX(), this.getRect().getMinY());
-		
+
 		// Правая верхняя (1)
 		coords.get(1).setLocation(this.getRect().getMaxX(), this.getRect().getMinY());
-		
+
 		// Правая нижняя (2)
-				coords.get(2).setLocation(this.getRect().getMaxX(), this.getRect().getMaxY());
-		
+		coords.get(2).setLocation(this.getRect().getMaxX(), this.getRect().getMaxY());
+
 		// Левая нижняя (3)
 		coords.get(3).setLocation(this.getRect().getMinX(), this.getRect().getMaxY());
 
@@ -64,8 +63,6 @@ public class Box {
 		return rect;
 	}
 
-	
-
 	/**
 	 * @return the position
 	 */
@@ -74,11 +71,10 @@ public class Box {
 	}
 
 	/**
-	 * @param position
-	 *            the position to set
+	 * @param position the position to set
 	 */
 	public final void setPosition(Point2D position) {
-		this.position = position;	
+		this.position = position;
 		setRect();
 		setCoords();
 	}
@@ -91,8 +87,7 @@ public class Box {
 	}
 
 	/**
-	 * @param boxWidth
-	 *            the boxWidth to set
+	 * @param boxWidth the boxWidth to set
 	 */
 	public final void setBoxWidth(int boxWidth) {
 		this.boxWidth = boxWidth;
@@ -108,8 +103,7 @@ public class Box {
 	}
 
 	/**
-	 * @param boxHeigth
-	 *            the boxHeigth to set
+	 * @param boxHeigth the boxHeigth to set
 	 */
 	public final void setBoxHeigth(int boxHeigth) {
 		this.boxHeigth = boxHeigth;
@@ -134,39 +128,39 @@ public class Box {
 
 	public boolean isCorrelation(Box anotherBox) {
 		Rectangle2D d = this.getRect().createIntersection(anotherBox.getRect());
-		
+
 		return d.getWidth() > 0 && d.getHeight() > 0;
 	}
 
-	public boolean isConnection(Box anotherBox) {		
-		Rectangle2D d = this.getRect().createIntersection(anotherBox.getRect());		
-		
-		return !(d.getWidth() == 0 && d.getHeight() == 0) && 
-				((d.getWidth() == 0 && d.getHeight() > 0) || 
-				(d.getHeight() == 0 && d.getWidth() > 0));		
+	public boolean isConnection(Box anotherBox) {
+		Rectangle2D d = this.getRect().createIntersection(anotherBox.getRect());
+
+		return !(d.getWidth() == 0 && d.getHeight() == 0)
+				&& ((d.getWidth() == 0 && d.getHeight() > 0) || (d.getHeight() == 0 && d.getWidth() > 0));
 	}
-	
-	public boolean isContains(Box anotherBox) {		
-		return this.getRect().contains(anotherBox.getRect());	
+
+	public boolean isContains(Box anotherBox) {
+		return this.getRect().contains(anotherBox.getRect());
 	}
 
 	public void drawBox(Graphics graphics) {
 		Color oldColor = graphics.getColor();
 		graphics.setColor(this.getBoxColor());
-		graphics.fillRect((int) this.getPosition().getX(), (int) this.getPosition().getY(),
-				this.getBoxWidth(), this.getBoxHeigth());
+		graphics.fillRect((int) this.getPosition().getX(), (int) this.getPosition().getY(), this.getBoxWidth(),
+				this.getBoxHeigth());
 		graphics.setColor(oldColor);
 	}
-	
-	public void drawBox(Graphics graphics, boolean isConnection) {		
+
+	public void drawBox(Graphics graphics, boolean isConnection) {
 		Color oldColor = graphics.getColor();
-		if (isConnection) {			
+		if (isConnection) {
 			graphics.setColor(Color.GREEN);
-			graphics.fillRect((int) this.getPosition().getX(), (int) this.getPosition().getY(),
-					this.getBoxWidth(), this.getBoxHeigth());
-			graphics.setColor(this.getBoxColor());			
-			graphics.fillRect((int) this.getPosition().getX() + corrFrameWidth, (int) this.getPosition().getY() + corrFrameWidth,
-					this.getBoxWidth() - corrFrameWidth * 2, this.getBoxHeigth() - corrFrameWidth * 2);
+			graphics.fillRect((int) this.getPosition().getX(), (int) this.getPosition().getY(), this.getBoxWidth(),
+					this.getBoxHeigth());
+			graphics.setColor(this.getBoxColor());
+			graphics.fillRect((int) this.getPosition().getX() + corrFrameWidth,
+					(int) this.getPosition().getY() + corrFrameWidth, this.getBoxWidth() - corrFrameWidth * 2,
+					this.getBoxHeigth() - corrFrameWidth * 2);
 		} else {
 			this.drawBox(graphics);
 		}

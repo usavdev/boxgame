@@ -5,18 +5,17 @@ package com.usav.boxgame;
  *
  */
 public class Dice {
-	
-	static final int MIN_VALUE = 1; 
-	static final int MAX_VALUE = 6; 
-	
+
+	static final int MIN_VALUE = 1;
+	static final int MAX_VALUE = 6;
+
 	public static int getNext() {
-		return randomWithRange(MIN_VALUE,MAX_VALUE);
+		return randomWithRange(MIN_VALUE, MAX_VALUE);
 	}
 
-	private static int randomWithRange(int min, int max)
-	{
-	   int range = Math.abs(max - min) + 1;     
-	   return (int)(Math.random() * range) + (min <= max ? min : max);
+	private static int randomWithRange(int min, int max) {
+		int range = Math.abs(max - min) + 1;
+		return (int) (Math.random() * range) + (min <= max ? min : max);
 	}
-	
+
 }
