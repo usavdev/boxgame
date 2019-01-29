@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class Area {
 
@@ -99,11 +101,12 @@ public class Area {
 		return selfBox.isContains(box);
 	}
 
-	public final Point2D canBeAdded(Box box, ArrayList<Box> savedBoxes) {
+	public final Point2D canBeAdded(Box box, CopyOnWriteArrayList<Box> savedBoxes) {
 		Point2D sourcePos = box.getPosition();
 		Point2D possiblePos = new Point2D.Double();
+		ArrayList<Point2D> possiblePoints = new ArrayList<Point2D>();
 
-		if (savedBoxes.size() == 0) {			
+		if (savedBoxes.size() == 0) {
 			return possiblePos;
 		}
 
@@ -120,13 +123,17 @@ public class Area {
 							}
 						}
 						possiblePos = newPos;
-						break fnd;
+						possiblePoints.add(possiblePos);
+						// break fnd;
 					}
 				}
 			}
 		}
 
 		box.setPosition(sourcePos);
+		if (possiblePoints.size() > 0) {
+			possiblePos = possiblePoints.get(ThreadLocalRandom.current().nextInt(0, possiblePoints.size()));
+		}
 		return possiblePos;
 	}
 }

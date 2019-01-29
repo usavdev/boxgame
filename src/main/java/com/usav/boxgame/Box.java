@@ -4,6 +4,7 @@
 package com.usav.boxgame;
 
 import java.awt.Color;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.util.ArrayList;
 import java.awt.geom.Point2D;
@@ -22,6 +23,15 @@ public class Box {
 	private int boxHeigth;
 	private Color boxColor = Color.RED;
 	private final int corrFrameWidth = 5;
+	private int boxScore = 0;
+
+	public int getBoxScore() {
+		return boxScore;
+	}
+
+	public void setBoxScore(int boxScore) {
+		this.boxScore = boxScore;
+	}
 
 	/**
 	 * @param rect the rect to set
@@ -148,6 +158,7 @@ public class Box {
 		graphics.setColor(this.getBoxColor());
 		graphics.fillRect((int) this.getPosition().getX(), (int) this.getPosition().getY(), this.getBoxWidth(),
 				this.getBoxHeigth());
+		drawBoxScore(graphics);
 		graphics.setColor(oldColor);
 	}
 
@@ -164,6 +175,7 @@ public class Box {
 		} else {
 			this.drawBox(graphics);
 		}
+		drawBoxScore(graphics);
 		graphics.setColor(oldColor);
 	}
 
@@ -175,4 +187,18 @@ public class Box {
 		this.boxColor = boxColor;
 	}
 
+	private void drawBoxScore(Graphics graphics) {
+		Color oldColor = graphics.getColor();
+		graphics.setColor(Color.YELLOW);
+		String str = String.valueOf(this.getBoxScore());
+		FontMetrics fm = graphics.getFontMetrics();
+		Rectangle2D bounds = fm.getStringBounds(str, graphics);
+		int Ilength = (int) bounds.getWidth();
+		int Iheight = (int) bounds.getHeight();
+
+		graphics.drawString(str, (int) this.getPosition().getX() + this.getBoxWidth() / 2 - Ilength / 2,
+				(int) this.getPosition().getY() + this.getBoxHeigth() / 2 + Iheight / 2);
+		graphics.setColor(oldColor);
+
+	}
 }
