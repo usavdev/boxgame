@@ -64,9 +64,7 @@ public class App {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				if (canBeConnected) {
-					Box saveBox = new Box(boxGreen.getPosition(), boxGreen.getBoxWidth(), boxGreen.getBoxHeigth());
-					saveBox.setBoxColor(boxGreen.getBoxColor());
-					saveBox.setBoxScore(boxGreen.getBoxScore());
+					Box saveBox = new Box(boxGreen);					
 					savedBoxes.add(saveBox);
 					boxGreen.setBoxColor(new Color((int) (Math.random() * 0x1000000)));
 					int leftDice = Dice.getNext();

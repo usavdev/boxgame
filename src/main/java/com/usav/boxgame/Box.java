@@ -4,6 +4,7 @@
 package com.usav.boxgame;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.util.ArrayList;
@@ -136,6 +137,20 @@ public class Box {
 		setRect();
 	}
 
+	public Box(Box box) {
+		for (int i = 0; i < 4; i++) {
+			coords.add(new Point2D.Double());
+		}
+
+		setPosition(box.getPosition());
+		setBoxWidth(box.getBoxWidth());
+		setBoxHeigth(box.getBoxHeigth());
+		setCoords();
+		setRect();
+		setBoxColor(box.getBoxColor());
+		setBoxScore(box.getBoxScore());
+	}
+
 	public boolean isCorrelation(Box anotherBox) {
 		Rectangle2D d = this.getRect().createIntersection(anotherBox.getRect());
 
@@ -191,6 +206,8 @@ public class Box {
 		Color oldColor = graphics.getColor();
 		graphics.setColor(Color.YELLOW);
 		String str = String.valueOf(this.getBoxScore());
+		
+		graphics.setFont(new Font("TimesRoman", Font.PLAIN, 12)); 
 		FontMetrics fm = graphics.getFontMetrics();
 		Rectangle2D bounds = fm.getStringBounds(str, graphics);
 		int Ilength = (int) bounds.getWidth();
@@ -198,7 +215,6 @@ public class Box {
 
 		graphics.drawString(str, (int) this.getPosition().getX() + this.getBoxWidth() / 2 - Ilength / 2,
 				(int) this.getPosition().getY() + this.getBoxHeigth() / 2 + Iheight / 2);
-		graphics.setColor(oldColor);
-
+		graphics.setColor(oldColor);		
 	}
 }
