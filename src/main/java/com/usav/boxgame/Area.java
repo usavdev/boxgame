@@ -111,7 +111,7 @@ public class Area {
 		}
 
 		possiblePos.setLocation(-999, -999);
-		fnd: for (int x = 0; x <= this.getWidth() - box.getBoxWidth() / this.getCell(); x++) {
+		for (int x = 0; x <= this.getWidth() - box.getBoxWidth() / this.getCell(); x++) {
 			for (int y = 0; y <= this.getHeight() - box.getBoxHeigth() / this.getCell(); y++) {
 				Point2D newPos = new Point2D.Double(x * this.getCell(), y * this.getCell());
 				box.setPosition(newPos);
@@ -124,7 +124,6 @@ public class Area {
 						}
 						possiblePos = newPos;
 						possiblePoints.add(possiblePos);
-						// break fnd;
 					}
 				}
 			}

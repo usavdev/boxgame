@@ -22,10 +22,13 @@ public class App {
 	private static Graphics graphics;
 	private static Canvas canvas = new Canvas();
 	private static boolean canBeConnected = false;
+	private static Game game;
 
 	public static void main(String[] args) {
 		System.out.println("Hello Box!");
-
+		
+		game = new Game();
+		
 		DrawTest();
 
 	}
@@ -33,8 +36,8 @@ public class App {
 	public static void DrawTest() {
 
 		final String title = "Test Box";
-		final int width = area.getAreaWidth();
-		final int height = area.getAreaHeight();
+		final int width = game.getArea().getAreaWidth();
+		final int height = game.getArea().getAreaHeight();
 
 		JFrame frame = new JFrame(title);
 
@@ -63,68 +66,34 @@ public class App {
 		canvas.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				if (canBeConnected) {
-					Box saveBox = new Box(boxGreen);					
-					savedBoxes.add(saveBox);
-					boxGreen.setBoxColor(new Color((int) (Math.random() * 0x1000000)));
-					int leftDice = Dice.getNext();
-					int rightDice = Dice.getNext();
-					boxGreen.setBoxWidth(area.getCell() * leftDice);
-					boxGreen.setBoxHeigth(area.getCell() * rightDice);
-					boxGreen.setBoxScore(leftDice * rightDice);
-				}
+				game.mouseClicked(e);
 			}
 		});
 
 		boolean running = true;
-		boolean gameOver = !(area.canBeAdded(boxGreen, savedBoxes).getX() >= 0);
+		boolean gameOver = false;
+		
 		while (running) {
-			Point2D possiblePoint = area.canBeAdded(boxGreen, savedBoxes);
-			if (!gameOver) {
-				gameOver = !(possiblePoint.getX() >= 0);
-			} else {
-				frame.setTitle(title + " - Игра окончена!");
-			}
-
 			int mouse_x = MouseInfo.getPointerInfo().getLocation().x - canvas.getLocationOnScreen().x;
 			int mouse_y = MouseInfo.getPointerInfo().getLocation().y - canvas.getLocationOnScreen().y;
-			canBeConnected = savedBoxes.size() == 0;
-
-			if (!canBeConnected) {
-				for (Box box : savedBoxes) {
-					if (boxGreen.isConnection(box)) {
-						canBeConnected = true;
-						for (Box boxCorr : savedBoxes) {
-							if (boxGreen.isCorrelation(boxCorr)) {
-								canBeConnected = false;
-								break;
-							}
-						}
-					}
-				}
+			gameOver = !game.gameTick(new Point(mouse_x,mouse_y));
+			
+			if (gameOver) {
+				frame.setTitle(title + " - Игра окончена!");
 			}
 
 			bufferStrategy = canvas.getBufferStrategy();
 			graphics = bufferStrategy.getDrawGraphics();
 			graphics.clearRect(0, 0, width, height);
 
-			area.drawArea(graphics);
+			game.getArea().drawArea(graphics);
 
-			for (Box box : savedBoxes) {
+			for (Box box : game.getSavedBoxes()) {
 				box.drawBox(graphics);
 			}
 
-			Point2D newPosition = new Point(mouse_x - boxGreen.getBoxWidth() / 2,
-					mouse_y - boxGreen.getBoxHeigth() / 2);
-			//newPosition = possiblePoint;
-			Point2D oldPosition = boxGreen.getPosition();
-			boxGreen.setPosition(area.getPosition(newPosition));
-			if (!area.isContains(boxGreen)) {
-				boxGreen.setPosition(oldPosition);
-			}
-
-			boxGreen.drawBox(graphics, canBeConnected);
-
+			game.getBoxGreen().drawBox(graphics,game.isCanBeConnected());
+			
 			bufferStrategy.show();
 			graphics.dispose();
 		}
