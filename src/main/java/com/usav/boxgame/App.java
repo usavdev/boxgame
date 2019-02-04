@@ -26,9 +26,9 @@ public class App {
 
 	public static void main(String[] args) {
 		System.out.println("Hello Box!");
-		
+
 		game = new Game();
-		
+
 		DrawTest();
 
 	}
@@ -65,19 +65,24 @@ public class App {
 
 		canvas.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseClicked(MouseEvent e) {
-				game.mouseClicked(e);
+			public void mouseClicked(final MouseEvent e) {
+				new Runnable() {
+					public void run() {
+						game.mouseClicked(e);
+					}
+				}.run();
+
 			}
 		});
 
 		boolean running = true;
 		boolean gameOver = false;
-		
+
 		while (running) {
 			int mouse_x = MouseInfo.getPointerInfo().getLocation().x - canvas.getLocationOnScreen().x;
 			int mouse_y = MouseInfo.getPointerInfo().getLocation().y - canvas.getLocationOnScreen().y;
-			gameOver = !game.gameTick(new Point(mouse_x,mouse_y));
-			
+			gameOver = !game.gameTick(new Point(mouse_x, mouse_y));
+
 			if (gameOver) {
 				frame.setTitle(title + " - Игра окончена!");
 			}
@@ -92,8 +97,8 @@ public class App {
 				box.drawBox(graphics);
 			}
 
-			game.getBoxGreen().drawBox(graphics,game.isCanBeConnected());
-			
+			game.getBoxGreen().drawBox(graphics, game.isCanBeConnected());
+
 			bufferStrategy.show();
 			graphics.dispose();
 		}

@@ -51,8 +51,8 @@ public class Game {
 	public void mouseClicked(MouseEvent e) {
 		if (canBeConnected) {
 			Box saveBox = new Box(boxGreen);
+			saveBox.setPosition(area.getPosition(new Point2D.Double(e.getX(), e.getY())));
 			savedBoxes.add(saveBox);
-			
 			boxGreen.setBoxColor(new Color((int) (Math.random() * 0x1000000)));
 			int leftDice = Dice.getNext();
 			int rightDice = Dice.getNext();
