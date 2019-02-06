@@ -2,12 +2,12 @@ package com.usav.boxgame;
 
 import java.awt.Color;
 import java.awt.Point;
-import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Game {
 	private CopyOnWriteArrayList<Box> savedBoxes = new CopyOnWriteArrayList<Box>();
+
 	public CopyOnWriteArrayList<Box> getSavedBoxes() {
 		return savedBoxes;
 	}
@@ -17,6 +17,7 @@ public class Game {
 	}
 
 	private Box boxGreen;
+
 	public Box getBoxGreen() {
 		return boxGreen;
 	}
@@ -26,6 +27,7 @@ public class Game {
 	}
 
 	private Area area = new Area(20, 20, 19);
+
 	public Area getArea() {
 		return area;
 	}
@@ -34,12 +36,12 @@ public class Game {
 		this.area = area;
 	}
 
-	
 	private boolean canBeConnected = false;
+
 	public boolean isCanBeConnected() {
 		return canBeConnected;
 	}
-	
+
 	Game() {
 		int leftDice = Dice.getNext();
 		int rightDice = Dice.getNext();
@@ -48,10 +50,10 @@ public class Game {
 		boxGreen.setBoxScore(leftDice * rightDice);
 	}
 
-	public void mouseClicked(MouseEvent e) {
+	public void mouseClicked(Point mousePoint) {
 		if (canBeConnected) {
 			Box saveBox = new Box(boxGreen);
-			saveBox.setPosition(area.getPosition(new Point2D.Double(e.getX(), e.getY())));
+			saveBox.setPosition(area.getPosition(mousePoint));
 			savedBoxes.add(saveBox);
 			boxGreen.setBoxColor(new Color((int) (Math.random() * 0x1000000)));
 			int leftDice = Dice.getNext();
@@ -64,7 +66,7 @@ public class Game {
 
 	public boolean gameTick(Point mousePoint) {
 		boolean continueGame = true;
-		
+
 		Point2D possiblePoint = area.canBeAdded(boxGreen, savedBoxes);
 		if (possiblePoint.getX() < 0) {
 			continueGame = false;
@@ -90,7 +92,7 @@ public class Game {
 		}
 
 		Point2D newPosition = new Point(mouse_x, mouse_y);
-		//newPosition = possiblePoint;
+		// newPosition = possiblePoint;
 		Point2D oldPosition = boxGreen.getPosition();
 		boxGreen.setPosition(area.getPosition(newPosition));
 		if (!area.isContains(boxGreen)) {

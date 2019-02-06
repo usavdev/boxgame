@@ -8,20 +8,14 @@ import java.awt.MouseInfo;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.geom.Point2D;
 import java.awt.image.BufferStrategy;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.swing.JFrame;
 
 public class App {
-	private static CopyOnWriteArrayList<Box> savedBoxes = new CopyOnWriteArrayList<Box>();
-	private static Area area = new Area(20, 20, 19);
-	private static Box boxGreen;
 	private static BufferStrategy bufferStrategy;
 	private static Graphics graphics;
 	private static Canvas canvas = new Canvas();
-	private static boolean canBeConnected = false;
 	private static Game game;
 
 	public static void main(String[] args) {
@@ -57,18 +51,13 @@ public class App {
 
 		canvas.createBufferStrategy(3);
 
-		int leftDice = Dice.getNext();
-		int rightDice = Dice.getNext();
-		boxGreen = new Box(new Point(0, 0), leftDice * area.getCell(), rightDice * area.getCell());
-		boxGreen.setBoxColor(new Color((int) (Math.random() * 0x1000000)));
-		boxGreen.setBoxScore(leftDice * rightDice);
-
 		canvas.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(final MouseEvent e) {
 				new Runnable() {
 					public void run() {
-						game.mouseClicked(e);
+						Point mousePoint = new Point(e.getX(), e.getY());
+						game.mouseClicked(mousePoint);
 					}
 				}.run();
 
