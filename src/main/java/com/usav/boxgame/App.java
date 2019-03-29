@@ -56,8 +56,7 @@ public class App {
 			public void mouseClicked(final MouseEvent e) {
 				new Runnable() {
 					public void run() {
-						Point mousePoint = new Point(e.getX(), e.getY());
-						game.mouseClicked(mousePoint);
+						game.mouseClicked(game.getBoxGreen().getPosition());
 					}
 				}.run();
 
